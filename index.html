@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro da Comunidade</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
+        .container { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { color: #25d366; text-align: center; }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 14px; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #25d366; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 20px; font-weight: bold; }
+        button:hover { background-color: #128c7e; }
+        
+        /* Esconde o sucesso inicialmente */
+        #success-screen { display: none; text-align: center; }
+        .neighborhood-box { border: 2px solid #25d366; padding: 15px; border-radius: 8px; margin-top: 20px; background-color: #e8fceb; }
+        #group-link { display: none; margin-top: 15px; background-color: #007bff; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="form-screen">
+        <h2>Cadastro Comunitário</h2>
+        <form id="registrationForm">
+            <label>Nome Completo da Criança</label>
+            <input type="text" id="nomeCrianca" required>
+
+            <label>Data de Nascimento</label>
+            <input type="date" id="dataNasc" required>
+
+            <label>RG da Criança</label>
+            <input type="text" id="rg" required>
+
+            <label>Sexo</label>
+            <select id="sexo">
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+            </select>
+
+            <label>Tamanho da Roupa</label>
+            <input type="text" id="tamanhoRoupa" placeholder="Ex: 8, 10, P">
+
+            <label>Tamanho do Calçado</label>
+            <input type="number" id="tamanhoCalcado">
+
+            <label>Nome do Responsável</label>
+            <input type="text" id="nomeResponsavel" required>
+
+            <label>Telefone do Responsável</label>
+            <input type="tel" id="telefone" placeholder="(00) 00000-0000" required>
+
+            <label>Endereço Completo</label>
+            <input type="text" id="endereco" required>
+
+            <label>Bairro</label>
+            <input type="text" id="bairroForm" required>
+
+            <button type="button" onclick="enviarWhatsApp()">Enviar para WhatsApp</button>
+        </form>
+    </div>
+
+    <div id="success-screen">
+        <h2 style="color: #128c7e;">✅ Cadastrado com Sucesso!</h2>
+        <p>Seus dados foram enviados. Agora, selecione seu bairro abaixo para entrar no grupo de avisos:</p>
+        
+        <div class="neighborhood-box">
+            <label>Selecione seu Bairro:</label>
+            <select id="bairroSelector" onchange="mostrarLinkGrupo()">
+                <option value="">-- Escolha um bairro --</option>
+                <option value="link1">Rio Pequeno</option>
+                <option value="link2">Sapé</option>
+                <option value="link3">Vila Dalva</option>
+                <option value="link4">Bairro Vila Nova</option>
+                <option value="link5">Bairro Industrial</option>
+                <option value="link6">Bairro Santa Cruz</option>
+                <option value="link7">Bairro Bela Vista</option>
+                <option value="link8">Bairro Santo Antônio</option>
+                <option value="link9">Bairro São José</option>
+                <option value="link10">Bairro Esperança</option>
+            </select>
+
+            <a id="group-link" href="#" target="_blank">
+                <button style="background-color: #007bff;">Entrar no Grupo do Bairro</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function enviarWhatsApp() {
+        // Pegando os valores
+        const dados = {
+            crianca: document.getElementById('nomeCrianca').value,
+            nasc: document.getElementById('dataNasc').value,
+            rg: document.getElementById('rg').value,
+            sexo: document.getElementById('sexo').value,
+            roupa: document.getElementById('tamanhoRoupa').value,
+            calcado: document.getElementById('tamanhoCalcado').value,
+            resp: document.getElementById('nomeResponsavel').value,
+            tel: document.getElementById('telefone').value,
+            end: document.getElementById('endereco').value,
+            bairro: document.getElementById('bairroForm').value
+        };
+
+        // Número de telefone que receberá os dados (Ex: 5511999999999)
+        const numeroDestino = "5511981772139"; 
+
+        // Criando a mensagem formatada
+        const mensagem = `*Novo Cadastro de Comunidade*%n%n` +
+            `*Criança:* ${dados.crianca}%n` +
+            `*Nascimento:* ${dados.nasc}%n` +
+            `*RG:* ${dados.rg}%n` +
+            `*Sexo:* ${dados.sexo}%n` +
+            `*Roupa:* ${dados.roupa} | *Calçado:* ${dados.calcado}%n` +
+            `*Responsável:* ${dados.resp}%n` +
+            `*Telefone:* ${dados.tel}%n` +
+            `*Endereço:* ${dados.end} - ${dados.bairro}`;
+
+        const url = `https://api.whatsapp.com/send?phone=${numeroDestino}&text=${mensagem.replace(/%n/g, '%0A')}`;
+
+        // Abre o WhatsApp
+        window.open(url, '_blank');
+
+        // Troca as telas
+        document.getElementById('form-screen').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'block';
+    }
+
+    function mostrarLinkGrupo() {
+        const select = document.getElementById('bairroSelector');
+        const linkBtn = document.getElementById('group-link');
+        const links = {
+            "link1": "https://chat.whatsapp.com/JyqqdTbHe7fLpJeXNswa3n",/*rio*/
+            "link2": "https://chat.whatsapp.com/BVLgYBVdxbA6kKbaAwnYP3",/*sapé*/
+            "link3": "https://chat.whatsapp.com/CTGdqHNVDbU7WZOMBBiHZR",/*viladalva*/
+            "link4": "https://chat.whatsapp.com/ExemploGrupo4",
+            "link5": "https://chat.whatsapp.com/ExemploGrupo5",
+            "link6": "https://chat.whatsapp.com/ExemploGrupo6",
+            "link7": "https://chat.whatsapp.com/ExemploGrupo7",
+            "link8": "https://chat.whatsapp.com/ExemploGrupo8",
+            "link9": "https://chat.whatsapp.com/ExemploGrupo9",
+            "link10": "https://chat.whatsapp.com/ExemploGrupo10"
+        };
+
+        if (select.value !== "") {
+            linkBtn.href = links[select.value];
+            linkBtn.style.display = 'block';
+        } else {
+            linkBtn.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
