@@ -56,7 +56,7 @@
             <label>Endereço Completo</label>
             <input type="text" id="endereco" required>
 
-            <label>Bairro</label>
+            <label>Comunidade</label>
             <input type="text" id="bairroForm" required>
   <p style="text-align: center;">APÓS EVIAR O CADASTRO VOLTE AQUI!</p>
             <button type="button" onclick="enviarWhatsApp()">Enviar para WhatsApp</button>
@@ -68,19 +68,19 @@
         <p>Seus dados foram enviados. Agora, selecione seu bairro abaixo para entrar no grupo de avisos:</p>
         
         <div class="neighborhood-box">
-            <label>Selecione seu Bairro:</label>
+            <label>Selecione Sua Comunidadeo:</label>
             <select id="bairroSelector" onchange="mostrarLinkGrupo()">
                 <option value="">-- Escolha um bairro --</option>
                 <option value="link1">Rio Pequeno</option>
                 <option value="link2">Sapé</option>
-                <option value="link3">Vila Dalva</option>
-                <option value="link4">Bairro Vila Nova</option>
+                <option value="link3">Vila Dalva</option> 
+                <option value="link4">Bairro Vila Nova</option>   
                 <option value="link5">Bairro Industrial</option>
                 <option value="link6">Bairro Santa Cruz</option>
                 <option value="link7">Bairro Bela Vista</option>
                 <option value="link8">Bairro Santo Antônio</option>
                 <option value="link9">Bairro São José</option>
-                <option value="link10">Bairro Esperança</option>
+                <option value="link10">Bairro Esperança</option> 
             </select>
 
             <a id="group-link" href="#" target="_blank">
@@ -103,8 +103,14 @@
             resp: document.getElementById('nomeResponsavel').value,
             tel: document.getElementById('telefone').value,
             end: document.getElementById('endereco').value,
-            bairro: document.getElementById('bairroForm').value
+            Comunidade: document.getElementById('bairroForm').value
         };
+
+        // Validação: Verifica se algum campo obrigatório está vazio
+        if (!dados.crianca || !dados.nasc || !dados.rg || !dados.resp || !dados.tel || !dados.end || !dados.Comunidade) {
+            alert("Por favor, preencha todos os campos obrigatórios antes de enviar.");
+            return; // Interrompe a função aqui
+        }
 
         // Número de telefone que receberá os dados (Ex: 5511999999999)
         const numeroDestino = "5511981772139"; 
@@ -118,7 +124,7 @@
             `*Roupa:* ${dados.roupa} | *Calçado:* ${dados.calcado}%n` +
             `*Responsável:* ${dados.resp}%n` +
             `*Telefone:* ${dados.tel}%n` +
-            `*Endereço:* ${dados.end} - ${dados.bairro}`;
+            `*Endereço:* ${dados.end} - ${dados.Comunidade}`;
 
         const url = `https://api.whatsapp.com/send?phone=${numeroDestino}&text=${mensagem.replace(/%n/g, '%0A')}`;
 
