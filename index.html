@@ -22,13 +22,12 @@
         button { width: 100%; padding: 12px; background-color: #25d366; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 20px; font-weight: bold; }
         button:hover { background-color: #128c7e; }
         
-        /* Esconde o sucesso inicialmente */
         #success-screen { display: none; text-align: center; }
         .neighborhood-box { border: 2px solid #25d366; padding: 15px; border-radius: 8px; margin-top: 20px; background-color: #e8fceb; }
         #group-link { display: none; margin-top: 15px; background-color: #007bff; }
     </style>
 </head>
-<body>
+<body onload="configurarTravaDeIdade()">
 
 <div class="container">
     <img style="width: 70%; display: flex; margin: auto;" src="./logo.png" alt="" srcset="">
@@ -67,7 +66,7 @@
 
             <label>Comunidade</label>
             <input type="text" id="bairroForm" required>
-  <p style="text-align: center;">APÓS EVIAR O CADASTRO VOLTE AQUI!</p>
+            <p style="text-align: center;">APÓS ENVIAR O CADASTRO VOLTE AQUI!</p>
             <button type="button" onclick="enviarWhatsApp()">Enviar para WhatsApp</button>
         </form>
     </div>
@@ -77,7 +76,7 @@
         <p>Seus dados foram enviados. Agora, selecione seu bairro abaixo para entrar no grupo de avisos:</p>
         
         <div class="neighborhood-box">
-            <label>Selecione Sua Comunidadeo:</label>
+            <label>Selecione Sua Comunidade:</label>
             <select id="bairroSelector" onchange="mostrarLinkGrupo()">
                 <option value="">-- Escolha um bairro --</option>
                 <option value="link1">Rio Pequeno</option>
@@ -100,8 +99,19 @@
 </div>
 
 <script>
+    function configurarTravaDeIdade() {
+        const hoje = new Date();
+        // Define o ano limite como 2016 (10 anos atrás em relação a 2026)
+        const anoLimite = hoje.getFullYear() - 10;
+        const dataMinimaPermitida = `${anoLimite}-01-01`;
+        
+        // Aplica o limite no calendário: não permite selecionar datas antes de 01/01/2016
+        document.getElementById('dataNasc').setAttribute('min', dataMinimaPermitida);
+        // Não permite selecionar datas futuras
+        document.getElementById('dataNasc').setAttribute('max', hoje.toISOString().split("T")[0]);
+    }
+
     function enviarWhatsApp() {
-        // Pegando os valores
         const dados = {
             crianca: document.getElementById('nomeCrianca').value,
             nasc: document.getElementById('dataNasc').value,
@@ -115,16 +125,22 @@
             Comunidade: document.getElementById('bairroForm').value
         };
 
-        // Validação: Verifica se algum campo obrigatório está vazio
         if (!dados.crianca || !dados.nasc || !dados.rg || !dados.resp || !dados.tel || !dados.end || !dados.Comunidade) {
-            alert("Por favor, preencha todos os campos obrigatórios antes de enviar.");
-            return; // Interrompe a função aqui
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
         }
 
-        // Número de telefone que receberá os dados (Ex: 5511999999999)
-        const numeroDestino = "5511940348016"; 
+        // Validação estrita: apenas nascidos de 2016 em diante
+        const anoNascimento = new Date(dados.nasc).getFullYear();
+        const hoje = new Date();
+        const limiteAno = hoje.getFullYear() - 10;
 
-        // Criando a mensagem formatada
+        if (anoNascimento < limiteAno) {
+            alert("O cadastro é permitido apenas para crianças nascidas a partir de " + limiteAno + " (máximo 10 anos).");
+            return;
+        }
+
+        const numeroDestino = "5511940348016"; 
         const mensagem = `*Novo Cadastro de Comunidade*%n%n` +
             `*Criança:* ${dados.crianca}%n` +
             `*Nascimento:* ${dados.nasc}%n` +
@@ -137,10 +153,7 @@
 
         const url = `https://api.whatsapp.com/send?phone=${numeroDestino}&text=${mensagem.replace(/%n/g, '%0A')}`;
 
-        // Abre o WhatsApp
         window.open(url, '_blank');
-
-        // Troca as telas
         document.getElementById('form-screen').style.display = 'none';
         document.getElementById('success-screen').style.display = 'block';
     }
@@ -149,16 +162,10 @@
         const select = document.getElementById('bairroSelector');
         const linkBtn = document.getElementById('group-link');
         const links = {
-            "link1": "https://chat.whatsapp.com/JyqqdTbHe7fLpJeXNswa3n",/*rio*/
-            "link2": "https://chat.whatsapp.com/BVLgYBVdxbA6kKbaAwnYP3",/*sapé*/
-            "link3": "https://chat.whatsapp.com/CTGdqHNVDbU7WZOMBBiHZR",/*viladalva*/
-            "link4": "https://chat.whatsapp.com/ExemploGrupo4",
-            "link5": "https://chat.whatsapp.com/ExemploGrupo5",
-            "link6": "https://chat.whatsapp.com/ExemploGrupo6",
-            "link7": "https://chat.whatsapp.com/ExemploGrupo7",
-            "link8": "https://chat.whatsapp.com/ExemploGrupo8",
-            "link9": "https://chat.whatsapp.com/ExemploGrupo9",
-            "link10": "https://chat.whatsapp.com/ExemploGrupo10"
+            "link1": "https://chat.whatsapp.com/JyqqdTbHe7fLpJeXNswa3n",
+            "link2": "https://chat.whatsapp.com/BVLgYBVdxbA6kKbaAwnYP3",
+            "link3": "https://chat.whatsapp.com/CTGdqHNVDbU7WZOMBBiHZR",
+            "link4": "#", "link5": "#", "link6": "#", "link7": "#", "link8": "#", "link9": "#", "link10": "#"
         };
 
         if (select.value !== "") {
