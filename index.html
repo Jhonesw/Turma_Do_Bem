@@ -3,13 +3,13 @@
 
 <head>
     <meta property="og:title" content="Cadastro Comunitário">
-<meta property="og:description" content="Faça aqui o cadastro da criança para os projetos da comunidade.">
-<meta property="og:image" content="https://jhonesw.github.io/Turma_Do_Bem/logo.png">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://jhonesw.github.io/Turma_Do_Bem/">
+    <meta property="og:description" content="Faça aqui o cadastro da criança para os projetos da comunidade.">
+    <meta property="og:image" content="https://jhonesw.github.io/Turma_Do_Bem/logo.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jhonesw.github.io/Turma_Do_Bem/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro da Comunidade</title>
@@ -27,45 +27,28 @@
         #group-link { display: none; margin-top: 15px; background-color: #007bff; }
     </style>
 </head>
-<body onload="configurarTravaDeIdade()">
+<body>
 
 <div class="container">
     <img style="width: 70%; display: flex; margin: auto;" src="./logo.png" alt="" srcset="">
     <div id="form-screen">
         <h2>Cadastro Comunitário</h2>
         <form id="registrationForm">
-            <label>Nome Completo da Criança</label>
+            <label>Nome da Mãe</label>
+            <input type="text" id="nomeMae" required>
+
+            <label>Nome da Criança</label>
             <input type="text" id="nomeCrianca" required>
 
-            <label>Data de Nascimento</label>
-            <input type="date" id="dataNasc" required>
+            <label>Celular da Mãe</label>
+            <input type="tel" id="celularMae" placeholder="(00) 00000-0000" required>
 
-            <label>RG da Criança</label>
-            <input type="text" id="rg" required>
-
-            <label>Sexo</label>
-            <select id="sexo">
-                <option value="Masculino">Masculino</option>
-                <option value="Feminino">Feminino</option>
-            </select>
-
-            <label>Tamanho da Roupa</label>
-            <input type="text" id="tamanhoRoupa" placeholder="Ex: 8, 10, P">
-
-            <label>Tamanho do Calçado</label>
-            <input type="number" id="tamanhoCalcado">
-
-            <label>Nome do Responsável</label>
-            <input type="text" id="nomeResponsavel" required>
-
-            <label>Telefone do Responsável</label>
-            <input type="tel" id="telefone" placeholder="(00) 00000-0000" required>
-
-            <label>Endereço Completo</label>
-            <input type="text" id="endereco" required>
+            <label>Nome da Líder</label>
+            <input type="text" id="nomeLider" required>
 
             <label>Comunidade</label>
             <input type="text" id="bairroForm" required>
+
             <p style="text-align: center;">APÓS ENVIAR O CADASTRO VOLTE AQUI!</p>
             <button type="button" onclick="enviarWhatsApp()">Enviar para WhatsApp</button>
         </form>
@@ -79,16 +62,22 @@
             <label>Selecione Sua Comunidade:</label>
             <select id="bairroSelector" onchange="mostrarLinkGrupo()">
                 <option value="">-- Escolha um bairro --</option>
-                <option value="link1">Rio Pequeno</option>
-                <option value="link2">Sapé</option>
-                <option value="link3">Vila Dalva</option> 
-                <option value="link4">Bairro Vila Nova</option>   
-                <option value="link5">Bairro Industrial</option>
-                <option value="link6">Bairro Santa Cruz</option>
-                <option value="link7">Bairro Bela Vista</option>
-                <option value="link8">Bairro Santo Antônio</option>
-                <option value="link9">Bairro São José</option>
-                <option value="link10">Bairro Esperança</option> 
+                <option value="link1">Sapé de Baixo</option>
+                <option value="link2">Sapé de Cima e Posto</option>
+                <option value="link3">Mandioquinha</option> 
+                <option value="link4">Jd Boa vista</option>   
+                <option value="link5">Jd Jaqueline</option>
+                <option value="link6">Jd João XIII / Apoador</option>
+                <option value="link7">Jd Guaraú</option>
+                <option value="link8">Rua 8</option>
+                <option value="link9">Jd Esther</option>
+                <option value="link10">Sem Terra</option> 
+                <option value="link11">Gelo</option>
+                <option value="link12">Piamonteses</option>
+                <option value="link13">Cohab Raposo</option>
+                <option value="link14">Ponta Da Praia</option>
+                <option value="link15">Predinhos</option>
+                <option value="link16">Jd São Domingos</option>
             </select>
 
             <a id="group-link" href="#" target="_blank">
@@ -99,61 +88,35 @@
 </div>
 
 <script>
-    function configurarTravaDeIdade() {
-        const hoje = new Date();
-        // Define o ano limite como 2016 (10 anos atrás em relação a 2026)
-        const anoLimite = hoje.getFullYear() - 10;
-        const dataMinimaPermitida = `${anoLimite}-01-01`;
-        
-        // Aplica o limite no calendário: não permite selecionar datas antes de 01/01/2016
-        document.getElementById('dataNasc').setAttribute('min', dataMinimaPermitida);
-        // Não permite selecionar datas futuras
-        document.getElementById('dataNasc').setAttribute('max', hoje.toISOString().split("T")[0]);
-    }
-
     function enviarWhatsApp() {
+        // Coleta apenas os campos que existem no seu formulário atual
         const dados = {
+            mae: document.getElementById('nomeMae').value,
             crianca: document.getElementById('nomeCrianca').value,
-            nasc: document.getElementById('dataNasc').value,
-            rg: document.getElementById('rg').value,
-            sexo: document.getElementById('sexo').value,
-            roupa: document.getElementById('tamanhoRoupa').value,
-            calcado: document.getElementById('tamanhoCalcado').value,
-            resp: document.getElementById('nomeResponsavel').value,
-            tel: document.getElementById('telefone').value,
-            end: document.getElementById('endereco').value,
-            Comunidade: document.getElementById('bairroForm').value
+            celular: document.getElementById('celularMae').value,
+            lider: document.getElementById('nomeLider').value,
+            comunidade: document.getElementById('bairroForm').value
         };
 
-        if (!dados.crianca || !dados.nasc || !dados.rg || !dados.resp || !dados.tel || !dados.end || !dados.Comunidade) {
-            alert("Por favor, preencha todos os campos obrigatórios.");
-            return;
-        }
-
-        // Validação estrita: apenas nascidos de 2016 em diante
-        const anoNascimento = new Date(dados.nasc).getFullYear();
-        const hoje = new Date();
-        const limiteAno = hoje.getFullYear() - 10;
-
-        if (anoNascimento < limiteAno) {
-            alert("O cadastro é permitido apenas para crianças nascidas a partir de " + limiteAno + " (máximo 10 anos).");
+        // Validação simples de preenchimento
+        if (!dados.mae || !dados.crianca || !dados.celular || !dados.lider || !dados.comunidade) {
+            alert("Por favor, preencha todos os campos.");
             return;
         }
 
         const numeroDestino = "5511940348016"; 
         const mensagem = `*Novo Cadastro de Comunidade*%n%n` +
-            `*Criança:* ${dados.crianca}%n` +
-            `*Nascimento:* ${dados.nasc}%n` +
-            `*RG:* ${dados.rg}%n` +
-            `*Sexo:* ${dados.sexo}%n` +
-            `*Roupa:* ${dados.roupa} | *Calçado:* ${dados.calcado}%n` +
-            `*Responsável:* ${dados.resp}%n` +
-            `*Telefone:* ${dados.tel}%n` +
-            `*Endereço:* ${dados.end} - ${dados.Comunidade}`;
+            `*Nome da Mãe:* ${dados.mae}%n` +
+            `*Nome da Criança:* ${dados.crianca}%n` +
+            `*Celular da Mãe:* ${dados.celular}%n` +
+            `*Nome da Líder:* ${dados.lider}%n` +
+            `*Comunidade:* ${dados.comunidade}`;
 
         const url = `https://api.whatsapp.com/send?phone=${numeroDestino}&text=${mensagem.replace(/%n/g, '%0A')}`;
 
         window.open(url, '_blank');
+        
+        // Troca de tela
         document.getElementById('form-screen').style.display = 'none';
         document.getElementById('success-screen').style.display = 'block';
     }
@@ -162,10 +125,22 @@
         const select = document.getElementById('bairroSelector');
         const linkBtn = document.getElementById('group-link');
         const links = {
-            "link1": "https://chat.whatsapp.com/JyqqdTbHe7fLpJeXNswa3n",
-            "link2": "https://chat.whatsapp.com/BVLgYBVdxbA6kKbaAwnYP3",
-            "link3": "https://chat.whatsapp.com/CTGdqHNVDbU7WZOMBBiHZR",
-            "link4": "#", "link5": "#", "link6": "#", "link7": "#", "link8": "#", "link9": "#", "link10": "#"
+            "link1": "https://chat.whatsapp.com/L1CTqTmkbTP9zcOblrHnsK?mode=gi_t",
+            "link2": "https://chat.whatsapp.com/KD0ed31vOgsKhiOHpK3C2v?mode=gi_t",
+            "link3": "https://chat.whatsapp.com/G8oaXNzfjnt75dKjU5xuu4?mode=gi_t",
+            "link4": "https://chat.whatsapp.com/Kx0qTOd53R71ejZkuHJ76a?mode=gi_t", 
+            "link5": "https://chat.whatsapp.com/BTo1YTKykbVEm49vNvAujX?mode=gi_t", 
+            "link6": "https://chat.whatsapp.com/H9W68tyfgLd50WdrLD6hzl?mode=gi_t", 
+            "link7": "https://chat.whatsapp.com/GWKISYttbXE4b6HMBAcuUG?mode=gi_t", 
+            "link8": "https://chat.whatsapp.com/GWqZCZLs4yS99yVosijJzq?mode=gi_t", 
+            "link9": "https://chat.whatsapp.com/EbvJ19E7bPJ4TqEcLGqizM?mode=gi_t", 
+            "link10": "https://chat.whatsapp.com/HmASaxUGRDZCUY39YLKRlG?mode=gi_t",
+            "link11": "https://chat.whatsapp.com/HWltI07ZT5wJbfJaG4m6Xn?mode=gi_t",
+            "link12": "https://chat.whatsapp.com/IFTgd739XnfA1xXlxObN6e?mode=gi_t",
+            "link13": "https://chat.whatsapp.com/KcFdzw6o95y31640lkjIhQ?mode=gi_t",
+            "link14": "https://chat.whatsapp.com/CNu1hDkOWsEDY6LKbdalZd?mode=gi_t",
+            "link15": "https://chat.whatsapp.com/FLybyxVnTN29CVUwr1RZEY?mode=gi_t",
+            "link16": "https://chat.whatsapp.com/FmgU0IU5xhRAZKzSufj9cS?mode=gi_t"
         };
 
         if (select.value !== "") {
